@@ -1,18 +1,22 @@
-// declare a variable using let and store of value of type string in it
-let myString = "Hello, world!";
+//Functions are fun!
 
-// declare a variable using let and store of value of type number in it
-let myNumber = 123;
+function doMath (a, b) {
+    let result = a * b
+    return result
+    // console.log(`this is the result ${a - b}`)
+    // console.log(`this is the result ${a + b}`)
+    // console.log(`this is the result ${a / b}`)
+    // console.log(`this is the result ${a * b}`)
+}
 
-// declare a variable using let and store of value of type boolean in it
-let myBoolean = true;
+const doMoreMath = (a, b) => a * b
+ 
 
-// console.log the VALUES stored in the VARIABLES
-console.log(myString);
-console.log(myNumber);
-console.log(myBoolean);
 
-// use typeof to console log the TYPE of the VALUES stored in the VARIABLES
-console.log(typeof myString);
-console.log(typeof myNumber);
-console.log(typeof myBoolean);
+console.log(doMoreMath(20, 30))
+
+
+const result = doMath(10, 4)
+console.log(`this result was returned from the function  ${result}`)
+
+ 
