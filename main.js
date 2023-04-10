@@ -1,22 +1,19 @@
-//Functions are fun!
+// my arrow function
 
-function doMath (a, b) {
-    let result = a * b
-    return result
-    // console.log(`this is the result ${a - b}`)
-    // console.log(`this is the result ${a + b}`)
-    // console.log(`this is the result ${a / b}`)
-    // console.log(`this is the result ${a * b}`)
+function doSquare (a, b) {
+    let temp = 1
+    for(i = 0; i < b; i++){
+        temp *= a 
+    }
+    return temp
 }
 
-const doMoreMath = (a, b) => a * b
- 
+doMoreSquare = (a, b) => {
+    let temp = 1
+    for(i = 0; i < b; i++){
+        temp *= a 
+    }
+    return temp
+}
 
-
-console.log(doMoreMath(20, 30))
-
-
-const result = doMath(10, 4)
-console.log(`this result was returned from the function  ${result}`)
-
- 
+console.log(doMoreSquare(2, 3))
