@@ -3,16 +3,22 @@
 const FORM = document.getElementById('form-input')
 const ERR = document.getElementById('err')
 const AVG_OUTPUT = document.getElementById('output-avg')
+const TBL_OUTPUT = document.getElementById('table-out')
 
 /* MY_DATA is global array that will be updated by the user input with objects from form input values 
 and calculate data */
 
-const MY_DATA = []
+function getTripData() {
+    const tripDataJSON = localStorage.getItem('tripdata')
+    return JSON.parse(tripDataJSON)
+}
+
+const MY_DATA = getTripData()
 
 /* updateDOM function takes in input (string value) and id (to determine DOM location to update) 
 and creates and updates DOM elements*/
 
-const updateDOM = (input, id) => {
+function updateDOM (input, id) {
     const divEl = document.querySelector(id)
     const p = document.createElement('p')
     p.textContent = input
@@ -22,23 +28,23 @@ const updateDOM = (input, id) => {
 /* trackMPGandCost function takes in miles, gallons and price and calculates MPG and tripCost and 
 returns an object */
 
-const trackMPGandCost = (miles, gallons, price) => {
+function trackMPGandCost (miles, gallons, price) {
     const MPG  = Math.round(miles/gallons)
     const tripCost = Math.round(gallons * price)
     updateDOM(`Miles per gallon  is ${MPG} and trip cost is ${tripCost}`, '#output')
     return {
-        MPG: MPG, 
-        tripCost: tripCost,
         miles: miles,
         gallons: gallons,
-        price: price
+        price: price,
+        MPG: MPG, 
+        tripCost: tripCost,
     }
 }
 
 /* calculateAvg function loops over the MY_DATA to determine average MPG and Trip Cost
 */
 
-const calculateAvg = () => {
+function calculateAvg () {
     const numberOfObj = MY_DATA.length
     let sumMPG  = 0
     let sumTripCost = 0  
@@ -55,7 +61,7 @@ const calculateAvg = () => {
 /* isFormValid takes in miles, gallons and price and does simple validation and 
 returns boolean or truthy value back to eventlisteners */
 
-const isFormValid = (miles, gallons, price) => {
+function isFormValid (miles, gallons, price) {
     const errMsg = []
     if (miles === 0 || gallons === 0 || price === 0) {
         errMsg.push('Make sure your input value greater than 0!!, Try Again')
@@ -65,10 +71,57 @@ const isFormValid = (miles, gallons, price) => {
     }
     if (errMsg.length > 0) {
         ERR.textContent = errMsg
-        return false
     } else {
         return true
     }
+}
+/* renderTableHeadings create the DOM structure of the table and loops over an array of heading strings 
+to create the th (heading) for the table output */
+
+function renderTableHeadings () {
+    const tbl = document.createElement('table')
+    const headings = ['Miles Driven:','Gallons Used:','Price Paid:','Trip MPG','Trip Cost','Edit/Delete']
+    const tr = document.createElement('tr')
+    headings.forEach(function(heading){
+        let th = document.createElement('th')
+        th.textContent = heading
+        tr.appendChild(th)
+    })
+    tbl.appendChild(tr)
+    return tbl
+}
+
+/* renderEditDelBtn the DOM creation of the buttons for handling edit and delete functionality in the table */
+
+function renderEditDelBtn () {
+    const td = document.createElement('td')
+    const editBtn = document.createElement('button')
+    editBtn.textContent = 'edit'
+    const delBtn = document.createElement('button')
+    delBtn.textContent = 'delete'
+    td.appendChild(editBtn)
+    td.appendChild(delBtn)
+    return td
+}
+
+/* renderTable hands the render the DOM for the array of object (MY_DATA)  */
+
+function renderTable() {
+    TBL_OUTPUT.innerHTML = ''
+    const tbl = renderTableHeadings()
+    TBL_OUTPUT.appendChild(tbl)
+    MY_DATA.forEach(function(obj){
+        const tr = document.createElement('tr')
+        for(key in obj){
+            let td = document.createElement('td')
+            td.textContent = obj[key]
+            tr.appendChild(td)
+        }
+        const btnTD = renderEditDelBtn()
+        tr.appendChild(btnTD)
+        tbl.appendChild(tr)
+    })
+    
 }
 
 /* Eventlisteners for form submit button, checks validation and if valid saves input data and calculated 
@@ -85,6 +138,7 @@ FORM.addEventListener('submit', (e) => {
         AVG_OUTPUT.textContent = ''
         const dataObj = trackMPGandCost(miles, gallons, price)
         MY_DATA.push(dataObj)
+        renderTable()
         calculateAvg()
     }
     FORM.reset()  
